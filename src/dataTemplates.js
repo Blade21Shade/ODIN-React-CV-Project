@@ -22,14 +22,14 @@ const workHistoryTemplate = {
     endDate: ''
 }
 
-function getDataTemplate() {
+export function getDataTemplate() {
     return {...dataTemplate}
 }
 
-function getEducationTemplate() {
+export function getEducationTemplate() {
     return {...educationTemplate}
 }
 
-function getWorkHistoryTemplate() {
+export function getWorkHistoryTemplate() {
     return {...workHistoryTemplate};
 }
