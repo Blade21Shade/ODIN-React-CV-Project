@@ -1,10 +1,10 @@
 import EducationFormEntry from "./EducationFormEntry";
 import WorkHistoryFormEntry from "./WorkHistoryFormEntry";
-import { getEducationTemplate, getWorkHistoryTemplate } from "../dataTemplates";
+import { getEducationTemplate, getWorkHistoryTemplate, deepCopyData} from "../dataTemplates";
 
 export default function Form({data, setLoadFormIfTrue, updateData}) {
     function addEntry(workOrEducation) {
-        let updatedData = {...data};
+        let updatedData = deepCopyData(data);
         let id = crypto.randomUUID();
         
         if (workOrEducation === 'work') {
@@ -17,7 +17,7 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
     }
     
     function deleteEntry(workOrEducation, id) {
-        let updatedData = {...data};
+        let updatedData = deepCopyData(data);
         let arrayToSearch;
 
         if (workOrEducation === 'work') {
@@ -36,7 +36,7 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
     }
 
     function updatePersonalInformation(newVal, whatsUpdating) {
-        let updatedData = {...data};
+        let updatedData = deepCopyData(data);
 
         if (whatsUpdating === 'firstName') {
             updatedData.firstName = newVal;
@@ -57,15 +57,15 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
             <h1>Personal Information</h1>
             <div id="nameContainer">
                 <label htmlFor="firstName">First Name: </label>
-                <input type="text" name="firstName" id='firstName' onChange={(e)=> updatePersonalInformation(e.target.value, 'firstName')} required>{data.firstName}</input>
+                <input type="text" name="firstName" id='firstName' onChange={(e)=> updatePersonalInformation(e.target.value, 'firstName')} required></input>
                 <label htmlFor="lastName">Last Name: </label>
-                <input type="text" name="lastName" id="lastName" onChange={(e)=> updatePersonalInformation(e.target.value, 'lastName')} required>{data.lastName}</input>
+                <input type="text" name="lastName" id="lastName" value={data.lastName} onChange={(e)=> updatePersonalInformation(e.target.value, 'lastName')} required></input>
             </div>
             <div id="contactInfoContainer">
                 <label htmlFor="email">Email: </label>
-                <input type="email" name="email" id="email" autoComplete="email" onChange={(e)=> updatePersonalInformation(e.target.value, 'email')} required>{data.email}</input>
+                <input type="email" name="email" id="email" autoComplete="email" value={data.email} onChange={(e)=> updatePersonalInformation(e.target.value, 'email')} required></input>
                 <label htmlFor="phone">Phone: </label>
-                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phone" id="phone" autoComplete="off" onChange={(e)=> updatePersonalInformation(e.target.value, 'phone')} required>{data.phone}</input>
+                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="phone" id="phone" autoComplete="off" value={data.phone} onChange={(e)=> updatePersonalInformation(e.target.value, 'phone')} required></input>
             </div>
         </div>
         <div>
@@ -74,6 +74,8 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
                 <WorkHistoryFormEntry
                     key={entry.id}
                     workHistoryObject={entry}
+                    data={data}
+                    updateData={updateData}
                     deleteEntry={deleteEntry}>
                 </WorkHistoryFormEntry>
             ))}
@@ -85,6 +87,8 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
                 <EducationFormEntry
                     key={entry.id}
                     educationObject={entry}
+                    data={data}
+                    updateData = {updateData}
                     deleteEntry={deleteEntry}>
                 </EducationFormEntry>
             ))}

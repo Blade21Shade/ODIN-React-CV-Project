@@ -3,8 +3,8 @@ const dataTemplate = {
     lastName: '',
     email: '',
     phone: '',
-    education: [],
-    workHistory: []
+    education: [], // Stored as [{id: x, education: education{...}}, ...]
+    workHistory: [] // Stored as [{id: x, workHistory: workHistory{...}}, ...]
 }
 
 const educationTemplate = {
@@ -16,10 +16,35 @@ const educationTemplate = {
 }
 
 const workHistoryTemplate = {
-    companyName: '',
-    positionTitle: '',
+    company: '',
+    position: '',
     startDate: '',
     endDate: ''
+}
+
+export function deepCopyData(data) {
+    let newData = {...data};
+
+    let workHistory = [];
+    data.workHistory.forEach(element => {
+        workHistory.push({
+            id: element.id,
+            workHistory: {...element.workHistory}
+        });
+    });
+
+    let education = [];
+    data.education.forEach(element => {
+        education.push({
+            id: element.id,
+            education: {...element.education}
+        });
+    });
+
+    newData.workHistory = workHistory;
+    newData.education = education;
+
+    return newData;
 }
 
 export function getDataTemplate() {
