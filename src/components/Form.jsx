@@ -28,9 +28,12 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
             return;
         }
         
-        arrayToSearch = arrayToSearch.filter((entry) => {
-            entry.id != id;
-        });
+        for (let i = 0; i < arrayToSearch.length; i++) {
+            if (arrayToSearch[i].id === id) {
+                arrayToSearch.splice(i, 1);
+                break;
+            }
+        }
 
         updateData(updatedData);
     }
@@ -79,7 +82,7 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
                     deleteEntry={deleteEntry}>
                 </WorkHistoryFormEntry>
             ))}
-            <button onClick={() => addEntry('createNewWorkHistoryEntry')}>Add Work History</button>
+            <button type='button' onClick={() => addEntry('work')}>Add Work History</button>
         </div>
         <div>
             <h1>Education</h1>
@@ -92,7 +95,7 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
                     deleteEntry={deleteEntry}>
                 </EducationFormEntry>
             ))}
-            <button onClick={() => addEntry('createNewEducationEntry')}>Add Education</button>
+            <button type='button' onClick={() => addEntry('education')}>Add Education</button>
         </div>
         <button onClick={() => setLoadFormIfTrue(false)}>Submit</button>
     </form>
