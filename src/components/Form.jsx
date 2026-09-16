@@ -10,7 +10,7 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
         if (workOrEducation === 'work') {
             updatedData.workHistory.push({id: id, workHistory: getWorkHistoryTemplate()});
         } else if (workOrEducation === 'education') {
-            updateData.education.push({id: id, education: getEducationTemplate()});
+            updatedData.education.push({id: id, education: getEducationTemplate()});
         }
 
         updateData(updatedData);

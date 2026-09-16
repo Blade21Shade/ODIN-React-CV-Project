@@ -8,11 +8,11 @@ const dataTemplate = {
 }
 
 const educationTemplate = {
-    at: '',
+    school: '',
     stateDate: '',
     endDate: '',
     educationLevel: '',
-    educationTitle: ''
+    educationField: ''
 }
 
 const workHistoryTemplate = {
