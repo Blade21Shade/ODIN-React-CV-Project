@@ -36,13 +36,13 @@ export default function EducationFormEntry({data, updateData, educationObject, d
     return(
         <div>
             <label htmlFor="school">School: </label>
-            <input name="school" id="school" type="text" value={education.school} onChange={(e)=>updateEducation(e.target.value, 'school')}></input>
+            <input name="school" id="school" type="text" value={education.school} onChange={(e)=>updateEducation(e.target.value, 'school')} required></input>
 
             <label htmlFor="field">Field of study: </label>
-            <input name="field" id="field" type="text" value={education.educationField} onChange={(e)=>updateEducation(e.target.value, 'field')}></input>
+            <input name="field" id="field" type="text" value={education.educationField} onChange={(e)=>updateEducation(e.target.value, 'field')} required></input>
 
             <label htmlFor="level">Education Level: </label>
-            <select name="level" id="level" onChange={(e)=>updateEducation(e.target.value, 'educationLevel')}>
+            <select name="level" id="level" onChange={(e)=>updateEducation(e.target.value, 'educationLevel')} required>
                 <option value="">Select a Level</option>
                 <option value="High School">High School</option>
                 <option value="Associate's">Associate's</option>
@@ -57,7 +57,8 @@ export default function EducationFormEntry({data, updateData, educationObject, d
                 id="startDate"
                 type="date"
                 value={education.startDate}
-                onChange={(e)=>updateEducation(e.target.value, 'startDate')}>
+                onChange={(e)=>updateEducation(e.target.value, 'startDate')}
+                required>
             </input>
 
             <label htmlFor="endDate">End Date: </label>
@@ -66,7 +67,8 @@ export default function EducationFormEntry({data, updateData, educationObject, d
                 id="endDate"
                 type="date"
                 value={education.endDate}
-                onChange={(e)=>updateEducation(e.target.value, 'endDate')}>
+                onChange={(e)=>updateEducation(e.target.value, 'endDate')}
+                required>
             </input>
 
             <button type='button' onClick={() => deleteEntry('education', id)}>Delete</button>

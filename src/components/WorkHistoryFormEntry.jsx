@@ -34,10 +34,10 @@ export default function WorkHistoryFormEntry({data, updateData, workHistoryObjec
     return(
         <div>
             <label htmlFor="company">Company: </label>
-            <input name="company" id="company" type="text" value={workHistory.company} onChange={(e)=>updateWorkHistory(e.target.value, 'company')}></input>
+            <input name="company" id="company" type="text" value={workHistory.company} onChange={(e)=>updateWorkHistory(e.target.value, 'company')} required></input>
 
             <label htmlFor="position">Position: </label>
-            <input name="position" id="position" type="text" value={workHistory.position} onChange={(e)=>updateWorkHistory(e.target.value, 'position')}></input>
+            <input name="position" id="position" type="text" value={workHistory.position} onChange={(e)=>updateWorkHistory(e.target.value, 'position')} required></input>
 
             <label htmlFor="startDate">Start Date: </label>
             <input
@@ -45,7 +45,8 @@ export default function WorkHistoryFormEntry({data, updateData, workHistoryObjec
                 id="startDate"
                 type="date"
                 value={workHistory.startDate}
-                onChange={(e)=>updateWorkHistory(e.target.value, 'startDate')}>
+                onChange={(e)=>updateWorkHistory(e.target.value, 'startDate')}
+                required>
             </input>
 
             <label htmlFor="endDate">End Date: </label>
@@ -54,7 +55,8 @@ export default function WorkHistoryFormEntry({data, updateData, workHistoryObjec
                 id="endDate"
                 type="date"
                 value={workHistory.endDate}
-                onChange={(e)=>updateWorkHistory(e.target.value, 'endDate')}>
+                onChange={(e)=>updateWorkHistory(e.target.value, 'endDate')}
+                required>
             </input>
 
             <button type='button' onClick={() => deleteEntry('work', id)}>Delete</button>
