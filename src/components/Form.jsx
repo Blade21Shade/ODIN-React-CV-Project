@@ -55,12 +55,12 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
     }
     
     return (
-    <form>
+    <form onSubmit={(e) => {e.preventDefault; setLoadFormIfTrue(false)}}>
         <div>
             <h1>Personal Information</h1>
             <div id="nameContainer">
                 <label htmlFor="firstName">First Name: </label>
-                <input type="text" name="firstName" id='firstName' onChange={(e)=> updatePersonalInformation(e.target.value, 'firstName')} required></input>
+                <input type="text" name="firstName" id='firstName' value={data.firstName} onChange={(e)=> updatePersonalInformation(e.target.value, 'firstName')} required></input>
                 <label htmlFor="lastName">Last Name: </label>
                 <input type="text" name="lastName" id="lastName" value={data.lastName} onChange={(e)=> updatePersonalInformation(e.target.value, 'lastName')} required></input>
             </div>
@@ -97,7 +97,7 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
             ))}
             <button type='button' onClick={() => addEntry('education')}>Add Education</button>
         </div>
-        <button onClick={() => setLoadFormIfTrue(false)}>Submit</button>
+        <button>Submit</button>
     </form>
     )
 }
