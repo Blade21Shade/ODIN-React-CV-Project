@@ -39,7 +39,7 @@ export default function EducationFormEntry({data, updateData, educationObject, d
             <input name="school" id="school" type="text" value={education.school} onChange={(e)=>updateEducation(e.target.value, 'school')} required></input>
 
             <label htmlFor="field">Field of study: </label>
-            <input name="field" id="field" type="text" value={education.educationField} onChange={(e)=>updateEducation(e.target.value, 'field')} required></input>
+            <input name="field" id="field" type="text" value={education.educationField} onChange={(e)=>updateEducation(e.target.value, 'educationField')} required></input>
 
             <label htmlFor="level">Education Level: </label>
             <select name="level" id="level" onChange={(e)=>updateEducation(e.target.value, 'educationLevel')} required>
