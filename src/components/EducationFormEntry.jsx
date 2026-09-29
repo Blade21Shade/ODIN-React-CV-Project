@@ -1,6 +1,11 @@
 import { deepCopyData } from "../dataTemplates";
+import compareDates from "../tools/compareDates";
+import { useRef } from "react";
 
-export default function EducationFormEntry({data, updateData, educationObject, deleteEntry}) {
+export default function EducationFormEntry({data, updateData, updateBadInputs, educationObject, deleteEntry}) {
+    
+    // Used to display errors
+    const reference = useRef(null);
     
     let education = educationObject.education;
     let id = educationObject.id;
@@ -18,8 +23,10 @@ export default function EducationFormEntry({data, updateData, educationObject, d
             newEducation.educationField = newVal;
         } else if (whatsUpdating === 'startDate') {
             newEducation.startDate = newVal;
+            checkDates(newVal, newEducation.endDate);
         } else if (whatsUpdating === 'endDate') {
             newEducation.endDate = newVal;
+            checkDates(newEducation.startDate, newVal);
         } else {
             return;
         }
@@ -33,8 +40,38 @@ export default function EducationFormEntry({data, updateData, educationObject, d
         updateData(updatedData);
     }
 
+    function checkDates(startDate, endDate) {
+        let addOrRemove;
+
+        // Don't check until both dates are added
+        if (startDate === '' || endDate === '') {
+            return;
+        }
+
+        if (compareDates(startDate, endDate)) {
+            updateErrorPopUp('remove');
+            addOrRemove = 'remove';
+        } else {
+            updateErrorPopUp('add');
+            addOrRemove = 'add';
+        }
+
+        updateBadInputs(id, 'work', addOrRemove, 'dates');
+    }
+
+    function updateErrorPopUp(addOrRemove) {
+        if (addOrRemove === 'add') {
+            reference.current.hidden = false;
+            reference.current.innerText = 'Dates incorrectly formatted: Start Date must be before End Date';
+        } else {
+            reference.current.hidden = true;
+            reference.current.innerText = '';
+        }
+    }
+
     return(
         <div>
+            <div id="errorPopUp" ref={reference} style={{backgroundColor: 'red'}} hidden></div>
             <label htmlFor="school">School: </label>
             <input name="school" id="school" type="text" value={education.school} onChange={(e)=>updateEducation(e.target.value, 'school')} required></input>
 

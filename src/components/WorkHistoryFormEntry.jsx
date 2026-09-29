@@ -1,6 +1,11 @@
 import { deepCopyData } from "../dataTemplates";
+import compareDates from "../tools/compareDates";
+import { useRef } from "react";
 
-export default function WorkHistoryFormEntry({data, updateData, workHistoryObject, deleteEntry}) {
+export default function WorkHistoryFormEntry({data, updateData, updateBadInputs, workHistoryObject, deleteEntry}) {
+
+    // Used to display errors
+    const reference = useRef(null);
 
     let workHistory = workHistoryObject.workHistory;
     let id = workHistoryObject.id;
@@ -16,8 +21,10 @@ export default function WorkHistoryFormEntry({data, updateData, workHistoryObjec
             newWorkHistory.position = newVal;
         } else if (whatsUpdating === 'startDate') {
             newWorkHistory.startDate = newVal;
+            checkDates(newVal, newWorkHistory.endDate);
         } else if (whatsUpdating === 'endDate') {
             newWorkHistory.endDate = newVal;
+            checkDates(newWorkHistory.startDate, newVal);
         } else {
             return;
         }
@@ -31,8 +38,38 @@ export default function WorkHistoryFormEntry({data, updateData, workHistoryObjec
         updateData(updatedData);
     }
 
+    function checkDates(startDate, endDate) {
+        let addOrRemove;
+
+        // Don't check until both dates are added
+        if (startDate === '' || endDate === '') {
+            return;
+        }
+
+        if (compareDates(startDate, endDate)) {
+            updateErrorPopUp('remove');
+            addOrRemove = 'remove';
+        } else {
+            updateErrorPopUp('add');
+            addOrRemove = 'add';
+        }
+
+        updateBadInputs(id, 'work', addOrRemove, 'dates');
+    }
+
+    function updateErrorPopUp(addOrRemove) {
+        if (addOrRemove === 'add') {
+            reference.current.hidden = false;
+            reference.current.innerText = 'Dates incorrectly formatted: Start Date must be before End Date';
+        } else {
+            reference.current.hidden = true;
+            reference.current.innerText = '';
+        }
+    }
+
     return(
         <div>
+            <div id="errorPopUp" ref={reference} style={{backgroundColor: 'red'}} hidden></div>
             <label htmlFor="company">Company: </label>
             <input name="company" id="company" type="text" value={workHistory.company} onChange={(e)=>updateWorkHistory(e.target.value, 'company')} required></input>
 

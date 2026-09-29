@@ -9,7 +9,7 @@ const dataTemplate = {
 
 const educationTemplate = {
     school: '',
-    stateDate: '',
+    startDate: '',
     endDate: '',
     educationLevel: '',
     educationField: ''
