@@ -1,8 +1,11 @@
 import EducationFormEntry from "./EducationFormEntry";
 import WorkHistoryFormEntry from "./WorkHistoryFormEntry";
 import { getEducationTemplate, getWorkHistoryTemplate, deepCopyData} from "../dataTemplates";
+import { useState } from "react";
 
 export default function Form({data, setLoadFormIfTrue, updateData}) {
+    const [badInputs, setBadInputs] = useState({work: [], education: []});
+    
     function addEntry(workOrEducation) {
         let updatedData = deepCopyData(data);
         let id = crypto.randomUUID();
@@ -18,24 +21,39 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
     
     function deleteEntry(workOrEducation, id) {
         let updatedData = deepCopyData(data);
-        let arrayToSearch;
+        let copyBI = copyBadInputs();
+        
+        let dataArrayToSearch;
+        let badInputArrayToSearch;
 
         if (workOrEducation === 'work') {
-            arrayToSearch = updatedData.workHistory;
+            dataArrayToSearch = updatedData.workHistory;
+            badInputArrayToSearch = copyBI.work;
         } else if (workOrEducation === 'education') {
-            arrayToSearch = updatedData.education;
+            dataArrayToSearch = updatedData.education;
+            badInputArrayToSearch = copyBI.education;
         } else {
             return;
         }
         
-        for (let i = 0; i < arrayToSearch.length; i++) {
-            if (arrayToSearch[i].id === id) {
-                arrayToSearch.splice(i, 1);
+        // Delete from data
+        for (let i = 0; i < dataArrayToSearch.length; i++) {
+            if (dataArrayToSearch[i].id === id) {
+                dataArrayToSearch.splice(i, 1);
+                break;
+            }
+        }
+
+        // Delete from badInputs
+        for (let i = 0; i < badInputArrayToSearch.length; i++) {
+            if (badInputArrayToSearch[i].id === id) {
+                badInputArrayToSearch.splice(i, 1);
                 break;
             }
         }
 
         updateData(updatedData);
+        setBadInputs(copyBI);
     }
 
     function updatePersonalInformation(newVal, whatsUpdating) {
@@ -53,9 +71,96 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
 
         updateData(updatedData);
     }
+
+    function updateBadInputs(id, workOrEducation, addOrRemove, field) {
+        let copyBI = copyBadInputs();
+
+        /**
+         * Check comment inside copyBadInputs to see data structure format
+         */
+
+        let arrayToSearch;
+        if (workOrEducation === 'work') {
+            arrayToSearch = copyBI.work;
+        } else {
+            arrayToSearch = copyBI.education;
+        }
+
+        // Find the entry with the matching ID and process as needed
+        let entry = findEntryByID(arrayToSearch, id);
+        if (entry) {
+            let index = entry.fields.indexOf(field);
+            if (addOrRemove === 'add' && index === -1) {
+                entry.fields.push(field);
+            } else if (addOrRemove === 'remove' && index !== -1) {
+                entry.fields.splice(index, 1);
+
+                // If there's no more issues, remove this entry
+                if (entry.fields.length === 0) {
+                    arrayToSearch.splice(i, 1);
+                }
+            }
+        } else if (addOrRemove === 'add') { // If an entry wasn't found but something needs to be added, make a new entry
+            arrayToSearch.push({id: id, fields: [field]});
+        }
+
+        setBadInputs(copyBI);
+    }
+
+    function findEntryByID(arrayToSearch, id) {
+        for (let i = 0; i < arrayToSearch.length; i++) {
+            if (arrayToSearch[i].id  === id) {
+                return arrayToSearch[i];
+            }
+        }
+    }
+
+    function copyBadInputs() {
+        let copyBI = {work: [], education: []};
+        /**
+         * {
+         *  work: [{id, [fields]}, ...]
+         *  education: [{id, [fields]}, ...]
+         * }
+         */
+
+        for (let i = 0; i < badInputs.work.length; i++) {
+            let badWork = badInputs.work[0];
+            let newBadWork = {id: badWork.id, fields:[...badWork.fields]};
+            copyBI.work.push(newBadWork);
+        }
+
+        for (let i = 0; i < badInputs.education.length; i++) {
+            let badEducation = badInputs.education[0];
+            let newBadEducation = {id: badEducation.id, fields:[...badEducation.fields]};
+            copyBI.education.push(newBadEducation);
+        }
+
+        return copyBI;
+    }
+
+    /**
+     * Handles form submission by checking if inputs are valid
+     * - The Form checks if required inputs are present, this function is solely for checking the validity of inputs
+     * - If so, calls Parent component's setter for context switching
+     * @param {Event} e 'submit' event from the Form
+     */
+    function handleFormSubmission(e) {
+
+        e.preventDefault();
+        let noIssues = true;
+        
+        if (badInputs.work.length > 0 || badInputs.education.length > 0) {
+            noIssues = false;
+        }
+
+        if (noIssues) {
+            setLoadFormIfTrue(false);
+        }
+    }
     
     return (
-    <form onSubmit={(e) => {e.preventDefault; setLoadFormIfTrue(false)}}>
+    <form onSubmit={handleFormSubmission}>
         <div>
             <h1>Personal Information</h1>
             <div id="nameContainer">
@@ -79,6 +184,7 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
                     workHistoryObject={entry}
                     data={data}
                     updateData={updateData}
+                    updateBadInputs={updateBadInputs}
                     deleteEntry={deleteEntry}>
                 </WorkHistoryFormEntry>
             ))}
@@ -92,6 +198,7 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
                     educationObject={entry}
                     data={data}
                     updateData = {updateData}
+                    updateBadInputs= {updateBadInputs}
                     deleteEntry={deleteEntry}>
                 </EducationFormEntry>
             ))}
