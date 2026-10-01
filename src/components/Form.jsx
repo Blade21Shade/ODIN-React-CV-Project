@@ -75,15 +75,36 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
     function updateBadInputs(id, workOrEducation, addOrRemove, field) {
         let copyBI = copyBadInputs();
 
+        updateBadInputsHelper(copyBI, id, workOrEducation, addOrRemove, field)
+
+        setBadInputs(copyBI);
+    }
+
+    function batchUpdateBadInputs(idList, workOrEducationList, addOrRemoveList, fieldList) {
+        let copyBI = copyBadInputs();
+
+        for (let i = 0; i <= idList.length; i++) {
+            let id = idList[i];
+            let workOrEducation = workOrEducationList[i];
+            let addOrRemove = addOrRemoveList[i];
+            let field = fieldList[i];
+
+            updateBadInputsHelper(copyBI, id, workOrEducation, addOrRemove, field);
+        }
+
+        setBadInputs(copyBI);
+    }
+
+    function updateBadInputsHelper(copyOfBI, id, workOrEducation, addOrRemove, field) {
         /**
          * Check comment inside copyBadInputs to see data structure format
          */
 
         let arrayToSearch;
         if (workOrEducation === 'work') {
-            arrayToSearch = copyBI.work;
+            arrayToSearch = copyOfBI.work;
         } else {
-            arrayToSearch = copyBI.education;
+            arrayToSearch = copyOfBI.education;
         }
 
         // Find the entry with the matching ID and process as needed
@@ -97,14 +118,12 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
 
                 // If there's no more issues, remove this entry
                 if (entry.fields.length === 0) {
-                    arrayToSearch.splice(i, 1);
+                    arrayToSearch.splice(index, 1);
                 }
             }
         } else if (addOrRemove === 'add') { // If an entry wasn't found but something needs to be added, make a new entry
             arrayToSearch.push({id: id, fields: [field]});
         }
-
-        setBadInputs(copyBI);
     }
 
     function findEntryByID(arrayToSearch, id) {
@@ -185,6 +204,7 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
                     data={data}
                     updateData={updateData}
                     updateBadInputs={updateBadInputs}
+                    batchUpdateBadInputs={batchUpdateBadInputs}
                     deleteEntry={deleteEntry}>
                 </WorkHistoryFormEntry>
             ))}
@@ -198,7 +218,8 @@ export default function Form({data, setLoadFormIfTrue, updateData}) {
                     educationObject={entry}
                     data={data}
                     updateData = {updateData}
-                    updateBadInputs= {updateBadInputs}
+                    updateBadInputs={updateBadInputs}
+                    batchUpdateInputs={batchUpdateBadInputs}
                     deleteEntry={deleteEntry}>
                 </EducationFormEntry>
             ))}
