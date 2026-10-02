@@ -2,7 +2,7 @@ import { deepCopyData } from "../dataTemplates";
 import compareDates from "../tools/compareDates";
 import { useRef } from "react";
 
-export default function EducationFormEntry({data, updateData, updateBadInputs, educationObject, deleteEntry}) {
+export default function EducationFormEntry({data, updateData, updateBadInputs, batchUpdateBadInputs, educationObject, deleteEntry}) {
     
     // Used to display errors
     const reference = useRef(null);
@@ -41,28 +41,32 @@ export default function EducationFormEntry({data, updateData, updateBadInputs, e
     }
 
     function checkDates(startDate, endDate) {
-        let addOrRemove;
-
-        // Don't check until both dates are added
+    
+        // Don't compare unless both dates have been entered
         if (startDate === '' || endDate === '') {
             return;
         }
 
+        let addOrRemove;
+        let message;
         if (compareDates(startDate, endDate)) {
-            updateErrorPopUp('remove');
             addOrRemove = 'remove';
+            message = '';
         } else {
-            updateErrorPopUp('add');
             addOrRemove = 'add';
+            message = 'Dates in invalid order: Start date must be before end date'
         }
 
-        updateBadInputs(id, 'work', addOrRemove, 'dates');
+        updateErrorPopUp(addOrRemove, message);
+        
+
+        updateBadInputs(id, 'work', addOrRemove, 'datesInvalidOrder');
     }
 
-    function updateErrorPopUp(addOrRemove) {
+    function updateErrorPopUp(addOrRemove = 'add', message = 'Error message not defined') {
         if (addOrRemove === 'add') {
             reference.current.hidden = false;
-            reference.current.innerText = 'Dates incorrectly formatted: Start Date must be before End Date';
+            reference.current.innerText = message;
         } else {
             reference.current.hidden = true;
             reference.current.innerText = '';
