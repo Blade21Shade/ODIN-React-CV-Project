@@ -83,7 +83,7 @@ export default function EducationFormEntry({data, updateData, updateBadInputs, b
             <input name="field" id="field" type="text" value={education.educationField} onChange={(e)=>updateEducation(e.target.value, 'educationField')} required></input>
 
             <label htmlFor="level">Education Level: </label>
-            <select name="level" id="level" onChange={(e)=>updateEducation(e.target.value, 'educationLevel')} required>
+            <select name="level" value={education.educationLevel} id="level" onChange={(e)=>updateEducation(e.target.value, 'educationLevel')} required>
                 <option value="">Select a Level</option>
                 <option value="High School">High School</option>
                 <option value="Associate's">Associate's</option>
