@@ -12,7 +12,7 @@ function App() {
   if (loadFormIfTrue) {
     return <Form setLoadFormIfTrue={setLoadFormIfTrue} data={data} updateData={setData}></Form>
   } else {
-    return <Application setLoadFormIfTrue={setLoadFormIfTrue}></Application>
+    return <Application data={data} setLoadFormIfTrue={setLoadFormIfTrue}></Application>
   }
 }
 
