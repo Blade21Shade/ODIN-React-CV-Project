@@ -2,8 +2,8 @@ export default function Education({educationObject}) {
     let education = educationObject.education;
     
     return (
-        <div>
-            <p>{education.name}</p>
+        <div className = 'applicationListItem'>
+            <h2>{education.school}</h2>
 
             <p>Field: {education.educationField}</p>
             <p>Degree: {education.educationLevel}</p>

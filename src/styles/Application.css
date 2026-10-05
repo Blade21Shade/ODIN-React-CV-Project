@@ -1,0 +1,3 @@
+.applicationListItem:not(:last-child) {
+    border-bottom: 2px dashed black;
+}

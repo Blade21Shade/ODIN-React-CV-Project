@@ -1,6 +1,8 @@
 import Education from "./Education";
 import WorkHistory from "./WorkHistory";
 
+import "../styles/Application.css";
+
 export default function Application({data, setLoadFormIfTrue}) {
 
     return (

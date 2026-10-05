@@ -2,8 +2,8 @@ export default function WorkHistory({workHistoryObject}) {
     let workHistory = workHistoryObject.workHistory;
 
     return (
-        <div>
-            <p>{workHistory.company}</p>
+        <div className = 'applicationListItem'>
+            <h2>{workHistory.company}</h2>
 
             <p>Position: {workHistory.position}</p>
 
